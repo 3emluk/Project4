@@ -1,0 +1,20 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<taglib>
+    <tlibversion>1.0</tlibversion>
+    <jspversion>1.1</jspversion>
+    <shortname>substr</shortname>
+    <info>Concat jstl tag example</info>
+    <tag>
+        <name>substring</name>
+        <tagclass>com.epam.labs.utils.ConcatTagHandler</tagclass>
+        <info>Concat function.</info>
+        <attribute>
+            <name>originalLine</name>
+            <required>true</required>
+        </attribute>
+        <attribute>
+            <name>concatLine</name>
+            <required>true</required>
+        </attribute>
+    </tag>
+</taglib>
