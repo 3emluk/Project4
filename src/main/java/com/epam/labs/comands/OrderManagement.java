@@ -59,9 +59,9 @@ public class OrderManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing admin orders default command");
-            CarOrderDAO carOrderDAO = new CarOrderDAO();
-            CarDAO carDAO = new CarDAO();
-            UserDAO userDAO = new UserDAO();
+            CarOrderDAO carOrderDAO = CarOrderDAO.getInstance();
+            CarDAO carDAO = CarDAO.getInstance();
+            UserDAO userDAO = UserDAO.getInstance();
             ArrayList<CarOrder> tmp = (ArrayList<CarOrder>) carOrderDAO.getAll();
             ArrayList<CarOrderView> viewList = new ArrayList<>(tmp.size());
             for (CarOrder co : tmp) {
@@ -90,7 +90,7 @@ public class OrderManagement {
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing admin orders delete command");
             int id = Integer.parseInt(request.getParameter(ID_VALUE));
-            CarOrderDAO carOrderDAO = new CarOrderDAO();
+            CarOrderDAO carOrderDAO = CarOrderDAO.getInstance();
             carOrderDAO.deleteEntity(id);
             response.sendRedirect(SOURCE_PAGE);
         }
@@ -112,8 +112,8 @@ public class OrderManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing admin orders create command");
-            CarDAO carDAO = new CarDAO();
-            UserDAO userDAO = new UserDAO();
+            CarDAO carDAO = CarDAO.getInstance();
+            UserDAO userDAO = UserDAO.getInstance();
             request.setAttribute("cars", carDAO.getAllAvaliable());
             request.setAttribute("users", userDAO.getAll());
             request.setAttribute("action", "create");
@@ -155,7 +155,7 @@ public class OrderManagement {
             carOrder.setIsConfirmed(false);
             carOrder.setComment(request.getParameter("comment"));
             carOrder.setCharges(Integer.parseInt(request.getParameter("charges")));
-            CarOrderDAO userDAO = new CarOrderDAO();
+            CarOrderDAO userDAO = CarOrderDAO.getInstance();
             userDAO.saveEntity(carOrder);
             response.sendRedirect(SOURCE_PAGE);
         }
@@ -177,9 +177,9 @@ public class OrderManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing admin orders modify command");
-            CarOrderDAO carOrderDAO = new CarOrderDAO();
-            CarDAO carDAO = new CarDAO();
-            UserDAO userDAO = new UserDAO();
+            CarOrderDAO carOrderDAO = CarOrderDAO.getInstance();
+            CarDAO carDAO = CarDAO.getInstance();
+            UserDAO userDAO = UserDAO.getInstance();
             CarOrder carOrder = carOrderDAO.getByID(Integer.parseInt((request.getParameter("id"))));
             Car car = carDAO.getByID(carOrder.getIdCar());
             User user = userDAO.getByID(carOrder.getIdUser());
@@ -226,7 +226,7 @@ public class OrderManagement {
             carOrder.setIsConfirmed(Boolean.parseBoolean(request.getParameter("isConfirmed")));
             carOrder.setComment(request.getParameter("comment"));
             carOrder.setCharges(Integer.parseInt(request.getParameter("charges")));
-            CarOrderDAO userDAO = new CarOrderDAO();
+            CarOrderDAO userDAO = CarOrderDAO.getInstance();
             userDAO.updateEntity(carOrder);
             response.sendRedirect(SOURCE_PAGE);
         }
@@ -249,13 +249,12 @@ public class OrderManagement {
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing admin orders confirm order command");
             int id = Integer.parseInt(request.getParameter(ID_VALUE));
-            CarOrderDAO carOrderDAO = new CarOrderDAO();
-            CarDAO carDAO = new CarDAO();
+            CarOrderDAO carOrderDAO = CarOrderDAO.getInstance();
+            CarDAO carDAO = CarDAO.getInstance();
             CarOrder carOrder = carOrderDAO.getByID(id);
-            if(carDAO.checkAvaliability(carOrderDAO.getByID(id).getIdCar())){
+            if (carDAO.checkAvaliability(carOrderDAO.getByID(id).getIdCar())) {
                 carOrderDAO.confirmOrder(id);
-            }
-            else{
+            } else {
                 throw new DBException("Car is not avaliable");
             }
             response.sendRedirect(SOURCE_PAGE);

@@ -1,4 +1,3 @@
-<%@ page import="com.epam.labs.dao.UserDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="header.jsp"/>
 
@@ -15,21 +14,14 @@
 
 <c:choose>
     <c:when test="${sessionScope.user != null}">
-        <%
-            UserDAO userDAO = new UserDAO();
-            int idRole = userDAO.getUserRoleByID((int) (session.getAttribute("user")));
-        %>
-        <c:set var="role" value="<%= idRole %>"/>
         <c:choose>
-            <c:when test="${role == 1}">
+            <c:when test="${sessionScope.role == 'ADMINISTRATOR'}">
                 <c:set var="action" value="/administrator/orderManagement/"/>
             </c:when>
 
-            <c:when test="${role == 2}">
+            <c:when test="${sessionScope.role == 'CUSTOMER'}">
                 <c:set var="action" value="/user/customerOrders/"/>
             </c:when>
-
-
         </c:choose>
 
         <form method="POST" action="${action}">
@@ -71,7 +63,7 @@
                                value="${!empty requestScope.order ?  order.endDate : ''}"/></td>
                 </tr>
 
-                <c:if test="${role == 1}">
+                <c:if test="${sessionScope.role == 'ADMINISTRATOR'}">
                     <tr>
                         <td>
                             <select id="idUser" name="idUser" required>
@@ -90,14 +82,13 @@
                             </select>
                         </td>
                     </tr>
-                </c:if>
 
-                <c:if test="${role == 1}">
                     <tr>
                         <td><fmt:message key="order.field.charges" bundle="${lang}"/>:</td>
                         <td><input type="number" min="0" step="1" name="charges" id="charges" required
                                    value="${!empty requestScope.order ?  order.charges : ''}"/></td>
                     </tr>
+
                 </c:if>
                 <tr>
                     <td><fmt:message key="order.field.comment" bundle="${lang}"/>:</td>
@@ -107,8 +98,7 @@
                 <tr>
                     <td>
                         <select hidden="true" name='action'>
-
-                            <c:if test="${role == 1}">
+                            <c:if test="${sessionScope.role == 'ADMINISTRATOR'}">
                                 <option ${requestScope.action == 'modify' ? 'selected' : ''}
                                         value="modifyConcrete"></option>
                             </c:if>
@@ -123,7 +113,8 @@
 
                 <tr>
                     <td>
-                        <button type="submit" value="p" name="p" id="p" class="btn btn-primary"><fmt:message key="managment.button.confirm" bundle="${lang}"/></button>
+                        <button type="submit" value="p" name="p" id="p" class="btn btn-primary"><fmt:message
+                                key="managment.button.confirm" bundle="${lang}"/></button>
                     </td>
                 </tr>
             </table>

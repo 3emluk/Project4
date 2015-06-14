@@ -19,6 +19,11 @@ import java.util.List;
 public class UserDAO extends AbstractDAO<User> {
 
     /**
+     * Instance of singleton object
+     */
+    private static UserDAO UserDAO;
+
+    /**
      * ID field location at prepared statement
      */
     private static final int ID_USER = 1;
@@ -95,6 +100,23 @@ public class UserDAO extends AbstractDAO<User> {
     private static final String GET_USER_ROLE_BY_ID = "SELECT id_role " +
             "FROM my_user WHERE id = ?";
 
+
+    /**
+     * Private constructor for singleton realization
+     */
+    private UserDAO() {}
+
+    /**
+     * Method for returning singleton instance
+     * @return DAO instance
+     */
+    public static UserDAO getInstance() {
+        if (UserDAO == null) {
+            UserDAO = new UserDAO();
+        }
+        return UserDAO;
+    }
+
     /**
      * Method for saving user entity to database
      *
@@ -162,8 +184,6 @@ public class UserDAO extends AbstractDAO<User> {
                     log.error("SQLException", e);
                     log.info("Transaction is being rolled back");
                     throw new DBException(e.getMessage());
-//                } finally {
-//                    return id;
                 }
             } catch (SQLException e) {
                 log.error("SQLException", e);
@@ -191,8 +211,6 @@ public class UserDAO extends AbstractDAO<User> {
                         log.error("SQLException", e);
                         log.info("Transaction is being rolled back");
                         throw new DBException(e.getMessage());
-//                    } finally {
-//                        return id;
                     }
                 } catch (SQLException e) {
                     log.error("SQLException", e);
@@ -216,10 +234,8 @@ public class UserDAO extends AbstractDAO<User> {
             prStmt.setInt(ID_USER, id);
             ResultSet rs = prStmt.executeQuery();
             rs.next();
-//            if (rs.next()) {
             user = new User();
             setPOJOFields(rs, user);
-//            }
         } catch (SQLException e) {
             log.error("SQLException ", e);
             throw new DBException(e.getMessage());
@@ -227,10 +243,7 @@ public class UserDAO extends AbstractDAO<User> {
             log.error("Can`t find user with " + id + ": ", e);
             throw new DBException("There are no such user in the DB");
         }
-//        finally {
         return user;
-//        }
-
     }
 
     /**
@@ -260,17 +273,15 @@ public class UserDAO extends AbstractDAO<User> {
             log.error("NullPointerException.  There are no users in the DB", e);
             throw new DBException("There are no uses in the DB");
         }
-//        finally {
         return userList;
-//        }
     }
 
     /**
-     * Method for getting user entity by email & password combination from database
+     * Method for getting user entity by email and password combination from database
      *
      * @param email    email of user
      * @param password password of user
-     * @return Desired user entity with requested email&password
+     * @return Desired user entity with requested email and password
      * @throws DBException if some database exceptions occurred
      */
 
@@ -281,12 +292,9 @@ public class UserDAO extends AbstractDAO<User> {
             prStmt.setString(1, email);
             prStmt.setString(2, password);
             ResultSet rs = prStmt.executeQuery();
-
             rs.next();
-//            if (rs.next()) {
             user = new User();
             setPOJOFields(rs, user);
-//            }
         } catch (SQLException e) {
             log.error("SQLException ", e);
             throw new DBException(e.getMessage());
@@ -294,10 +302,7 @@ public class UserDAO extends AbstractDAO<User> {
             log.error("Can`t find user with " + email + ", " + password + ": ", e);
             throw new DBException("There are no such user in the DB");
         }
-//        finally {
         return user;
-//        }
-
     }
 
     /**
@@ -313,10 +318,8 @@ public class UserDAO extends AbstractDAO<User> {
              PreparedStatement prStmt = conn.prepareStatement(GET_USER_ROLE_BY_ID)) {
             prStmt.setInt(ID_USER, id);
             ResultSet rs = prStmt.executeQuery();
-//            if (rs.next()) {
             rs.next();
             idRole = rs.getInt(DBParams.USER_ROLE);
-//            }
         } catch (SQLException e) {
             log.error("SQLException ", e);
             throw new DBException(e.getMessage());
@@ -324,9 +327,7 @@ public class UserDAO extends AbstractDAO<User> {
             log.error("Can`t find user with " + id + ": ", e);
             throw new DBException("There are no such user in the DB");
         }
-//        finally {
         return idRole;
-//        }
     }
 
     /**

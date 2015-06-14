@@ -1,5 +1,3 @@
-<%@ page import="com.epam.labs.enums.Role" %>
-<%@ page import="com.epam.labs.POJO.User" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -10,8 +8,6 @@
        scope="session"/>
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle basename="pageLanguage" var="lang"/>
-
-
 
 <jsp:include page="header.jsp"/>
 
@@ -36,9 +32,11 @@
             <td><c:out value="${car.price}"/></td>
             <td><c:out value="${car.isAvaliable()}"/></td>
             <td>
-                <a href="/administrator/carManagement/?action=delete&id=${car.id}"><fmt:message key="car.action.remove" bundle="${lang}"/></a>
+                <a href="/administrator/carManagement/?action=delete&id=${car.id}"><fmt:message key="car.action.remove"
+                                                                                                bundle="${lang}"/></a>
                 <br>
-                <a href="/administrator/carManagement/?action=modify&id=${car.id}"><fmt:message key="car.action.change" bundle="${lang}"/></a>
+                <a href="/administrator/carManagement/?action=modify&id=${car.id}"><fmt:message key="car.action.change"
+                                                                                                bundle="${lang}"/></a>
             </td>
         </tr>
     </c:forEach>

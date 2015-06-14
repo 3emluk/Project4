@@ -18,6 +18,11 @@ import java.util.List;
 public class CarDAO extends AbstractDAO<Car> {
 
     /**
+     * Instance of singleton object
+     */
+    private static CarDAO carDAO;
+
+    /**
      * ID field location at prepared statement
      */
     private static final int ID_CAR = 1;
@@ -99,6 +104,24 @@ public class CarDAO extends AbstractDAO<Car> {
 
 
     /**
+     * Private constructor for singleton realization
+     */
+    private CarDAO() {
+    }
+
+    /**
+     * Method for returning singleton instance
+     *
+     * @return DAO instance
+     */
+    public static CarDAO getInstance() {
+        if (carDAO == null) {
+            carDAO = new CarDAO();
+        }
+        return carDAO;
+    }
+
+    /**
      * Method for saving car entity to database
      *
      * @param entity Car entity
@@ -109,19 +132,19 @@ public class CarDAO extends AbstractDAO<Car> {
     public int saveEntity(Car entity) throws DBException {
         int id = -1;
         try (Connection conn = ConnectionPool.getConnection()) {
-            try ( PreparedStatement prStmt = conn.prepareStatement(SAVE_CAR, new String[]{"id"})) {
-            prStmt.setString(MODEL, entity.getModel());
-            prStmt.setString(MANUFACTURER, entity.getManufacturer());
-            prStmt.setString(SIGN, entity.getSign());
-            prStmt.setInt(PRICE, entity.getPrice());
-            prStmt.setInt(IS_AVALIABLE, (entity.isAvaliable()) ? 1 : 0);
-            prStmt.executeUpdate();
-            ResultSet rs = prStmt.getGeneratedKeys();
-            if (rs != null && rs.next()) {
-                id = rs.getInt(1);
-            }
-            conn.commit();
-            log.info("Transaction is being committed");
+            try (PreparedStatement prStmt = conn.prepareStatement(SAVE_CAR, new String[]{"id"})) {
+                prStmt.setString(MODEL, entity.getModel());
+                prStmt.setString(MANUFACTURER, entity.getManufacturer());
+                prStmt.setString(SIGN, entity.getSign());
+                prStmt.setInt(PRICE, entity.getPrice());
+                prStmt.setInt(IS_AVALIABLE, (entity.isAvaliable()) ? 1 : 0);
+                prStmt.executeUpdate();
+                ResultSet rs = prStmt.getGeneratedKeys();
+                if (rs != null && rs.next()) {
+                    id = rs.getInt(1);
+                }
+                conn.commit();
+                log.info("Transaction is being committed");
             } catch (SQLException e) {
                 conn.rollback();
                 log.error("SQLException", e);
@@ -145,31 +168,29 @@ public class CarDAO extends AbstractDAO<Car> {
      */
     @Override
     public void updateEntity(Car entity) throws DBException {
-            try (Connection conn = ConnectionPool.getConnection()) {
-                try (PreparedStatement prStmt = conn.prepareStatement(UPDATE_CAR)) {
+        try (Connection conn = ConnectionPool.getConnection()) {
+            try (PreparedStatement prStmt = conn.prepareStatement(UPDATE_CAR)) {
 
-            prStmt.setString(MODEL, entity.getModel());
-            prStmt.setString(MANUFACTURER, entity.getManufacturer());
-            prStmt.setString(SIGN, entity.getSign());
-            prStmt.setInt(PRICE, entity.getPrice());
-            prStmt.setInt(IS_AVALIABLE, (entity.isAvaliable()) ? 1 : 0);
-            prStmt.setInt(ID_CAR_UPDATE, entity.getId());
-            prStmt.executeUpdate();
-            conn.commit();
-            log.info("Transaction is being committed");
-                } catch (SQLException e) {
-                    conn.rollback();
-                    log.error("SQLException", e);
-                    log.info("Transaction is being rolled back");
-                    throw new DBException(e.getMessage());
-//                } finally {
-//                    return id;
-                }
+                prStmt.setString(MODEL, entity.getModel());
+                prStmt.setString(MANUFACTURER, entity.getManufacturer());
+                prStmt.setString(SIGN, entity.getSign());
+                prStmt.setInt(PRICE, entity.getPrice());
+                prStmt.setInt(IS_AVALIABLE, (entity.isAvaliable()) ? 1 : 0);
+                prStmt.setInt(ID_CAR_UPDATE, entity.getId());
+                prStmt.executeUpdate();
+                conn.commit();
+                log.info("Transaction is being committed");
             } catch (SQLException e) {
+                conn.rollback();
                 log.error("SQLException", e);
-                log.info("Connection error");
+                log.info("Transaction is being rolled back");
                 throw new DBException(e.getMessage());
             }
+        } catch (SQLException e) {
+            log.error("SQLException", e);
+            log.info("Connection error");
+            throw new DBException(e.getMessage());
+        }
     }
 
     /**
@@ -180,25 +201,23 @@ public class CarDAO extends AbstractDAO<Car> {
      */
     @Override
     public void deleteEntity(int id) throws DBException {
-                try (Connection conn = ConnectionPool.getConnection()) {
-                    try (PreparedStatement statement = conn.prepareStatement(DELETE_CAR)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-            conn.commit();
-            log.info("Transaction is being committed");
-                    } catch (SQLException e) {
-                        conn.rollback();
-                        log.error("SQLException", e);
-                        log.info("Transaction is being rolled back");
-                        throw new DBException(e.getMessage());
-//                    } finally {
-//                        return id;
-                    }
-                } catch (SQLException e) {
-                    log.error("SQLException", e);
-                    log.info("Connection error");
-                    throw new DBException(e.getMessage());
-                }
+        try (Connection conn = ConnectionPool.getConnection()) {
+            try (PreparedStatement statement = conn.prepareStatement(DELETE_CAR)) {
+                statement.setInt(1, id);
+                statement.executeUpdate();
+                conn.commit();
+                log.info("Transaction is being committed");
+            } catch (SQLException e) {
+                conn.rollback();
+                log.error("SQLException", e);
+                log.info("Transaction is being rolled back");
+                throw new DBException(e.getMessage());
+            }
+        } catch (SQLException e) {
+            log.error("SQLException", e);
+            log.info("Connection error");
+            throw new DBException(e.getMessage());
+        }
     }
 
     /**

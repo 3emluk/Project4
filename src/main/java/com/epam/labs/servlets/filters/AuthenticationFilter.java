@@ -68,7 +68,7 @@ public class AuthenticationFilter implements Filter {
             return;
         } else {
             if (session != null) {
-                UserDAO userDAO = new UserDAO();
+                UserDAO userDAO = UserDAO.getInstance();
                 int idUser = (int) session.getAttribute("user");
                 int idRole = 0;
                 try {

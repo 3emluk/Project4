@@ -20,9 +20,10 @@ public class HashUtil {
      */
     public String getHash(String message) {
         log.info("Getting hash for password");
-        String msg = "";
-        String tmp = generateSHA256(message);
-        tmp = generateMD5(tmp);
+        String msg;
+        msg = new StringBuffer(message).reverse().toString();
+
+        String tmp = generateSHA256(msg);
         msg = generateSHA1(tmp);
         return msg;
     }
@@ -91,4 +92,5 @@ public class HashUtil {
         }
         return stringBuffer.toString();
     }
+
 }

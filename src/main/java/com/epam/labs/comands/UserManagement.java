@@ -50,7 +50,7 @@ public class UserManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing user default command");
-            UserDAO userDAO = new UserDAO();
+            UserDAO userDAO = UserDAO.getInstance();
             request.setAttribute("users", userDAO.getAll());
             request.getRequestDispatcher("/userManagement.jsp").forward(request, response);
         }
@@ -73,7 +73,7 @@ public class UserManagement {
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing user delete command");
             int id = Integer.parseInt(request.getParameter(ID_VALUE));
-            UserDAO userDAO = new UserDAO();
+            UserDAO userDAO = UserDAO.getInstance();
             userDAO.deleteEntity(id);
             response.sendRedirect(SOURCE_PAGE);
         }
@@ -132,7 +132,7 @@ public class UserManagement {
             String password = request.getParameter("password");
             HashUtil hashUtil = new HashUtil();
             user.setPassword(hashUtil.getHash(password));
-            UserDAO userDAO = new UserDAO();
+            UserDAO userDAO = UserDAO.getInstance();
             userDAO.saveEntity(user);
             response.sendRedirect(SOURCE_PAGE);
         }
@@ -154,7 +154,7 @@ public class UserManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing user modify request command");
-            UserDAO userDAO = new UserDAO();
+            UserDAO userDAO = UserDAO.getInstance();
             User user = userDAO.getByID(Integer.parseInt((request.getParameter("id"))));
             request.setAttribute("user", user);
             request.setAttribute("action", "modify");
@@ -196,7 +196,7 @@ public class UserManagement {
             String password = request.getParameter("password");
             HashUtil hashUtil = new HashUtil();
             user.setPassword(hashUtil.getHash(password));
-            UserDAO userDAO = new UserDAO();
+            UserDAO userDAO = UserDAO.getInstance();
             userDAO.updateEntity(user);
             response.sendRedirect(SOURCE_PAGE);
         }

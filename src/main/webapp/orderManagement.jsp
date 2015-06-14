@@ -1,4 +1,3 @@
-<%@ page import="com.epam.labs.dao.UserDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -14,24 +13,18 @@
 <jsp:include page="header.jsp"/>
 
 <br>
-
-<%
-    UserDAO userDAO = new UserDAO();
-    int idRole = userDAO.getUserRoleByID((int) (session.getAttribute("user")));
-%>
-<c:set var="role" value="<%= idRole %>"/>
-
 <c:choose>
     <c:when test="${sessionScope.user != null}">
-        <c:if test="${role == 1}">
-            <a href="/administrator/orderManagement/?action=create"><fmt:message key="order.action.create" bundle="${lang}"/></a>
+        <c:if test="${sessionScope.role == 'ADMINISTRATOR'}">
+            <a href="/administrator/orderManagement/?action=create"><fmt:message key="order.action.create"
+                                                                                 bundle="${lang}"/></a>
         </c:if>
-        <c:if test="${role == 2}">
+        <c:if test="${sessionScope.role == 'CUSTOMER'}">
             <a href="/user/customerOrders/?action=create"><fmt:message key="order.action.create" bundle="${lang}"/></a>
         </c:if>
         <table border="1">
                 <%--<c>--%>
-            <c:if test="${role == 1}">
+            <c:if test="${sessionScope.role == 'ADMINISTRATOR'}">
                 <th><fmt:message key="order.field.id" bundle="${lang}"/></th>
             </c:if>
                 <%--${role==1 ? '<th>id</th>' :''}--%>
@@ -43,29 +36,22 @@
             <th><fmt:message key="order.field.startDate" bundle="${lang}"/></th>
             <th><fmt:message key="order.field.duration" bundle="${lang}"/></th>
             <th><fmt:message key="order.field.endDate" bundle="${lang}"/></th>
-                <%--TODO change this to fmt tags--%>
-                <%--<c:choose>--%>
-            <c:choose>
-                <c:when test="${role == 1}">
 
-                    <th><fmt:message key="user.field.firstName" bundle="${lang}"/></th>
-                    <th><fmt:message key="user.field.lastName" bundle="${lang}"/></th>
-                    <th><fmt:message key="user.field.passportID" bundle="${lang}"/></th>
-                    <th><fmt:message key="user.field.location" bundle="${lang}"/></th>
-                    <th><fmt:message key="user.field.email" bundle="${lang}"/></th>
-                    <th><fmt:message key="user.field.phone" bundle="${lang}"/></th>
-
-
-                </c:when>
-            </c:choose>
-
+            <c:if test="${sessionScope.role == 'ADMINISTRATOR'}">
+                <th><fmt:message key="user.field.firstName" bundle="${lang}"/></th>
+                <th><fmt:message key="user.field.lastName" bundle="${lang}"/></th>
+                <th><fmt:message key="user.field.passportID" bundle="${lang}"/></th>
+                <th><fmt:message key="user.field.location" bundle="${lang}"/></th>
+                <th><fmt:message key="user.field.email" bundle="${lang}"/></th>
+                <th><fmt:message key="user.field.phone" bundle="${lang}"/></th>
+            </c:if>
 
             <th><fmt:message key="order.field.rentPrice" bundle="${lang}"/></th>
             <th><fmt:message key="order.field.charges" bundle="${lang}"/></th>
             <th><fmt:message key="order.field.fullPrice" bundle="${lang}"/></th>
             <th><fmt:message key="order.field.isConfirmed" bundle="${lang}"/></th>
             <th><fmt:message key="order.field.comment" bundle="${lang}"/></th>
-            <c:if test="${role == 1}">
+            <c:if test="${sessionScope.role == 'ADMINISTRATOR'}">
                 <th><fmt:message key="managment.field.operations" bundle="${lang}"/></th>
             </c:if>
                 <%--${role==1 ? '<th>Action</th>' :''}--%>
@@ -73,7 +59,7 @@
             <c:forEach items="${requestScope.orders}" var="order">
                 <tr>
                     <c:choose>
-                        <c:when test="${role == 1}">
+                        <c:when test="${sessionScope.role == 'ADMINISTRATOR'}">
                             <td><c:out value="${order.id}"/></td>
                             <td><c:out value="${order.carOrderNumber}"/></td>
                             <td><c:out value="${order.carManufacturer}"/></td>
@@ -106,7 +92,7 @@
                             </td>
                         </c:when>
 
-                        <c:when test="${role == 2}">
+                        <c:when test="${sessionScope.role == 'CUSTOMER'}">
                             <td><c:out value="${order.carOrderNumber}"/></td>
                             <td><c:out value="${order.carManufacturer}"/></td>
                             <td><c:out value="${order.carModel}"/></td>

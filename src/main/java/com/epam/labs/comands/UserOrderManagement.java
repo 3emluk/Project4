@@ -50,9 +50,9 @@ public class UserOrderManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing user order default command");
-            CarOrderDAO carOrderDAO = new CarOrderDAO();
-            CarDAO carDAO = new CarDAO();
-            UserDAO userDAO = new UserDAO();
+            CarOrderDAO carOrderDAO =CarOrderDAO.getInstance();
+            CarDAO carDAO = CarDAO.getInstance();
+            UserDAO userDAO = UserDAO.getInstance();
             HttpSession session = request.getSession(false);
             ArrayList<CarOrder> tmp = (ArrayList<CarOrder>) carOrderDAO.getOrdersForUser((int) session.getAttribute("user"));
             ArrayList<CarOrderView> viewList = new ArrayList<>(tmp.size());
@@ -80,8 +80,8 @@ public class UserOrderManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing user order create command");
-            CarDAO carDAO = new CarDAO();
-            UserDAO userDAO = new UserDAO();
+            CarDAO carDAO = CarDAO.getInstance();
+            UserDAO userDAO = UserDAO.getInstance();
             request.setAttribute("cars", carDAO.getAllAvaliable());
             request.setAttribute("action", "create");
             request.getRequestDispatcher(ADD_PAGE).forward(request, response);
@@ -122,8 +122,8 @@ public class UserOrderManagement {
             carOrder.setIdUser((int) session.getAttribute("user"));
             carOrder.setIsConfirmed(false);
             carOrder.setComment(request.getParameter("comment"));
-            CarOrderDAO userDAO = new CarOrderDAO();
-            userDAO.saveEntity(carOrder);
+            CarOrderDAO carOrderDAO = CarOrderDAO.getInstance();
+            carOrderDAO.saveEntity(carOrder);
             response.sendRedirect(SOURCE_PAGE);
         }
     }

@@ -1,4 +1,3 @@
-<%@ page import="com.epam.labs.dao.UserDAO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -36,16 +35,11 @@
         </select>
     </form>
     <c:choose>
-        <c:when test="${sessionScope.user != null}">
+        <c:when test="${(sessionScope.role != null) && sessionScope.user != null}">
             <li><a href="/logOut" id="logout"><fmt:message key="header.link.logOut" bundle="${lang}"/></a></li>
-            <%
-                UserDAO userDAO = new UserDAO();
-                int idRole = userDAO.getUserRoleByID((int) (session.getAttribute("user")));
-            %>
-            <c:set var="role" value="<%= idRole %>"/>
 
             <c:choose>
-                <c:when test="${role == 1}">
+                <c:when test="${sessionScope.role == 'ADMINISTRATOR'}">
                     <li><a href='/administrator/orderManagement/'><fmt:message key="header.link.orderManagment"
                                                                                bundle="${lang}"/></a></li>
                     <li><a href='/administrator/userManagement/'><fmt:message key="header.link.userManagment"
@@ -54,7 +48,8 @@
                                                                              bundle="${lang}"/></a></li>
                 </c:when>
 
-                <c:when test="${role == 2}">
+                <%--<c:when test="${role == 2}">--%>
+                <c:when test="${sessionScope.role == 'CUSTOMER'}">
                     <li><a href='/user/customerOrders/'><fmt:message key="header.link.customerOrders"
                                                                      bundle="${lang}"/></a></li>
                 </c:when>

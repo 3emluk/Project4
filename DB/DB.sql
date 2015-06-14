@@ -138,7 +138,7 @@
 
 	INSERT INTO my_user_role (id, role)
 	VALUES (2, 'Customer');
-
-	INSERT INTO my_user (ID_ROLE, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, PASSPORT_ID, LOCATION, PHONE) VALUES ('1', 'admin', '6a9167cf74bd3aef06e0ccfad9a0a0566378e3c5', 'admin', 'admin', 'admin', 'admin', 'admin');
+-- pass: admin
+	INSERT INTO my_user (ID_ROLE, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, PASSPORT_ID, LOCATION, PHONE) VALUES ('1', 'admin', '6ee3d219b7bdaff83a5fc76d2880bfee21aae6e8', 'admin', 'admin', 'admin', 'admin', 'admin');
 
 	COMMIT;

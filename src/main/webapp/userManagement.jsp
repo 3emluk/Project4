@@ -1,5 +1,5 @@
-<%@ page import="com.epam.labs.enums.Role" %>
 <%@ page import="com.epam.labs.POJO.User" %>
+<%@ page import="com.epam.labs.enums.Role" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -11,8 +11,6 @@
        scope="session"/>
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle basename="pageLanguage" var="lang"/>
-
-
 
 
 <jsp:include page="header.jsp"/>
@@ -54,9 +52,11 @@
             <td><c:out value="${usr.location}"/></td>
             <td><c:out value="${usr.phone}"/></td>
             <td>
-                <a href="/administrator/userManagement/?action=delete&id=${usr.id}"><fmt:message key="user.actions.remove" bundle="${lang}"/></a>
+                <a href="/administrator/userManagement/?action=delete&id=${usr.id}"><fmt:message
+                        key="user.actions.remove" bundle="${lang}"/></a>
                 <br>
-                <a href="/administrator/userManagement/?action=modify&id=${usr.id}"><fmt:message key="user.actions.change" bundle="${lang}"/></a>
+                <a href="/administrator/userManagement/?action=modify&id=${usr.id}"><fmt:message
+                        key="user.actions.change" bundle="${lang}"/></a>
             </td>
 
         </tr>

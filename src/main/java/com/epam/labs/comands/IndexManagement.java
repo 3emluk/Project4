@@ -79,7 +79,7 @@ public class IndexManagement {
             log.info("Executing index authorize command");
             String email = request.getParameter("email");
             String password = request.getParameter("passwd");
-            UserDAO userDAO = new UserDAO();
+            UserDAO userDAO = UserDAO.getInstance();
             HashUtil hashUtil = new HashUtil();
             password = hashUtil.getHash(password);
             User user = null;
@@ -87,6 +87,7 @@ public class IndexManagement {
                 user = userDAO.findUser(email, password);
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user.getId());
+                session.setAttribute("role", user.getIdRole().getName());
                 //setting session to expiry in 30 mins
                 session.setMaxInactiveInterval(30 * 60);
                 Cookie userName = new Cookie("user", Integer.toString(user.getId()));
@@ -186,7 +187,7 @@ public class IndexManagement {
             HashUtil hashUtil = new HashUtil();
             user.setPassword(hashUtil.getHash(password));
 
-            UserDAO userDAO = new UserDAO();
+            UserDAO userDAO = UserDAO.getInstance();
             userDAO.saveEntity(user);
             response.sendRedirect(SOURCE_PAGE);
         }

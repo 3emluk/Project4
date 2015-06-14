@@ -1,5 +1,4 @@
 <%@ page import="com.epam.labs.POJO.User" %>
-<%@ page import="com.epam.labs.dao.UserDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="header.jsp"/>
 
@@ -16,13 +15,8 @@
 
 <c:choose>
     <c:when test="${sessionScope.user != null}">
-        <%
-            UserDAO userDAO = new UserDAO();
-            int idRole = userDAO.getUserRoleByID((int) (session.getAttribute("user")));
-        %>
-        <c:set var="role" value="<%= idRole %>"/>
         <c:choose>
-            <c:when test="${role == 1}">
+            <c:when test="${sessionScope.role == 'ADMINISTRATOR'}">
                 <c:set var="action" value="/administrator/userManagement/"/>
             </c:when>
 
@@ -72,7 +66,7 @@
             <td><input type="tel" name="phone" id="phone" required
                        value="${!empty requestScope.user ?  user.phone : ''}"/></td>
         </tr>
-        <c:if test="${role == 1}">
+        <c:if test="${sessionScope.role == 'ADMINISTRATOR'}">
             <tr>
                 <td><fmt:message key="user.field.role" bundle="${lang}"/></td>
                 <%
@@ -102,12 +96,10 @@
             <td><input type="password" name="password" id="password" required/></td>
         </tr>
 
-        <c:out value="${role}"/>
-        <%--<c:if test="${role ==1}">--%>
+        <c:if test="${sessionScope.role == 'ADMINISTRATOR'}">
             <tr>
                 <td>
                     <select hidden="true" name='action'>
-                        <option ${requestScope.action == '' ? 'selected' : ''} value=""></option>
                         <option ${requestScope.action == 'modify' ? 'selected' : ''} value="modifyConcrete"></option>
                         <option ${requestScope.action == 'create' ? 'selected' : ''} value="createConcrete"></option>
                     </select>
@@ -117,7 +109,7 @@
             <tr>
                 <td><input type="hidden" name="id" id="id" value="${!empty requestScope.user ?  user.id:-1}"/>
             </tr>
-        <%--</c:if>--%>
+        </c:if>
         <tr>
             <td>
                 <button type="submit" value="p" name="p" id="p" class="btn btn-primary"><fmt:message

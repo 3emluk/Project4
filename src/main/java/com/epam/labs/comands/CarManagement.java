@@ -49,7 +49,7 @@ public class CarManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing default car command");
-            CarDAO carDAO = new CarDAO();
+            CarDAO carDAO = CarDAO.getInstance();
             request.setAttribute("cars", carDAO.getAll());
             request.getRequestDispatcher("/carManagement.jsp").forward(request, response);
         }
@@ -73,7 +73,7 @@ public class CarManagement {
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing delete car command");
             int id = Integer.parseInt(request.getParameter(ID_VALUE));
-            CarDAO carDAO = new CarDAO();
+            CarDAO carDAO = CarDAO.getInstance();
             carDAO.deleteEntity(id);
             response.sendRedirect(SOURCE_PAGE);
         }
@@ -122,7 +122,7 @@ public class CarManagement {
             car.setSign(request.getParameter("sign"));
             car.setPrice(Integer.parseInt(request.getParameter("price")));
             car.setIsAvaliable(Boolean.parseBoolean(request.getParameter("isAvaliable")));
-            CarDAO userDAO = new CarDAO();
+            CarDAO userDAO = CarDAO.getInstance();
             userDAO.saveEntity(car);
             response.sendRedirect(SOURCE_PAGE);
         }
@@ -144,7 +144,7 @@ public class CarManagement {
         @Override
         protected void doOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, DBException {
             log.info("Executing car modifying command");
-            CarDAO userDAO = new CarDAO();
+            CarDAO userDAO = CarDAO.getInstance();
             Car car = userDAO.getByID(Integer.parseInt((request.getParameter("id"))));
             request.setAttribute("car", car);
             request.setAttribute("action", "modify");
@@ -175,7 +175,7 @@ public class CarManagement {
             car.setSign(request.getParameter("sign"));
             car.setPrice(Integer.parseInt(request.getParameter("price")));
             car.setIsAvaliable(Boolean.parseBoolean(request.getParameter("isAvaliable")));
-            CarDAO userDAO = new CarDAO();
+            CarDAO userDAO = CarDAO.getInstance();
             userDAO.updateEntity(car);
             response.sendRedirect(SOURCE_PAGE);
         }

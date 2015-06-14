@@ -2,15 +2,11 @@ package com.epam.labs.utils;
 
 import oracle.jdbc.pool.OracleDataSource;
 import org.apache.log4j.Logger;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-
-//import javax.sql.DataSource;
-
 /**
  * Class for implementing Connection Pool. Initializes pool and provides connections.
  *
@@ -45,28 +41,6 @@ public class ConnectionPool {
         } catch (SQLException e) {
             log.error("Can't create desired datasource");
         }
-
-
-//            String url = "jdbc:oracle:thin:@localhost:1521:XE";
-//            ds = new OracleDataSource();
-//            ds.setURL(url);
-
-//            DataSource ds= new Connection();
-//            ds.setDriverType("thin");
-//            ds.setServerName("localhost");
-//            ds.setPortNumber(1521);
-//            ds.setDatabaseName("XE"); // Oracle SID
-//            ds.setUser("Herong");
-//            ds.setPassword("TopSecret");
-//
-//            ds = (DataSource) ic.lookup("jdbc/RemoteOracle");
-//            ds=new
-//        } catch (NamingException ex) {
-//            log.error("NamingException during DataSource lookup. ", ex);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        }
     }
 
     /**
@@ -80,13 +54,10 @@ public class ConnectionPool {
         if (conn == null || conn.isClosed()) {
             String username = "project4";
             String password = "project4";
-//        Connection conn= DriverManager.getConnection(url, username, password);
-//            conn = ds.getConnection(username,password);
             conn = ds.getConnection();
             conn.setAutoCommit(false);
             log.info("Created connection");
         }
         return conn;
     }
-
 }
